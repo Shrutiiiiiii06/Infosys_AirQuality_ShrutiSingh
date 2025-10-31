@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Complete HTML Tags Example">
+  <title>All HTML Tags Example - Shruti Singh</title>
+
+  <!-- External Style -->
+  <!-- <link rel="stylesheet" href="style.css"> -->
+
+  <!-- Internal CSS -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f8f9fa;
+      color: #222;
+    }
+    header, footer {
+      background: #e0e7ff;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    section {
+      background: #fff;
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      color: #0b5394;
+    }
+    table, th, td {
+      border: 1px solid #333;
+      border-collapse: collapse;
+      padding: 5px;
+    }
+    pre, code {
+      background: #f4f4f4;
+      padding: 4px 6px;
+      border-radius: 4px;
+    }
+    nav a {
+      color: #0b5394;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    <h1>Complete HTML Tags Demonstration</h1>
+    <p>Created by <strong>Shruti Singh</strong></p>
+    <nav>
+      <a href="#text">Text</a> |
+      <a href="#list">Lists</a> |
+      <a href="#form">Forms</a> |
+      <a href="#table">Tables</a> |
+      <a href="#media">Media</a>
+    </nav>
+  </header>
+
+  <!-- Text Formatting -->
+  <section id="text">
+    <h2>1. Text Formatting</h2>
+    <p>This is a <b>bold</b>, <strong>strong</strong>, <i>italic</i>, and <em>emphasized</em> text.</p>
+    <p><mark>Highlighted</mark> and <small>small</small> text examples.</p>
+    <p>Subscript: H<sub>2</sub>O, Superscript: E = mc<sup>2</sup></p>
+    <p><del>Deleted</del> and <ins>Inserted</ins> text.</p>
+    <blockquote>"Success doesn't come to you, you go to it."</blockquote>
+    <p>WWF's goal is to: <q>Build a future where people live in harmony with nature.</q></p>
+    <abbr title="HyperText Markup Language">HTML</abbr> stands for web structure.
+    <br>
+    <cite>Happy</cite> by <b>Ivy Solace</b>.
+    <bdo dir="rtl">This line will be written from right to left</bdo>
+  </section>
+
+  <!-- Lists -->
+  <section id="list">
+    <h2>2. Lists</h2>
+    <h3>Unordered List</h3>
+    <ul>
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>JavaScript</li>
+    </ul>
+
+    <h3>Ordered List</h3>
+    <ol>
+      <li>Learn HTML</li>
+      <li>Practice CSS</li>
+      <li>Master JavaScript</li>
+    </ol>
+
+    <h3>Definition List</h3>
+    <dl>
+      <dt>AI</dt>
+      <dd>Artificial Intelligence</dd>
+      <dt>ML</dt>
+      <dd>Machine Learning</dd>
+    </dl>
+  </section>
+
+  <!-- Table -->
+  <section id="table">
+    <h2>3. Tables</h2>
+    <table>
+      <caption><b>Student Information</b></caption>
+      <thead>
+        <tr><th>Name</th><th>Branch</th><th>Year</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Shreya</td><td>CSE-DS</td><td>3rd Year</td></tr>
+        <tr><td>Riya</td><td>IT</td><td>2nd Year</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td colspan="3">End of Table</td></tr>
+      </tfoot>
+    </table>
+  </section>
+
+  <!-- Links and Media -->
+  <section id="media">
+    <h2>4. Links and Media</h2>
+    <a href="https://www.google.com" target="_blank">Visit Google</a><br><br>
+
+    <img src="https://i.pinimg.com/474x/c9/77/17/c977177cb185bf18946969f5b4a047e7.jpg" alt="Placeholder Image"><br><br>
+
+    <video width="320" height="240" controls>
+      <source src="" type="video/mp4">
+      Your browser doesn't support video.
+    </video><br><br>
+
+    <audio controls>
+      <!-- The controls attribute adds audio controls, like play, pause, and volume. -->
+      <source src="audio.mp3" type="audio/mpeg">
+      Your browser doesn't support audio.
+    </audio><br><br>
+
+    <iframe width="420" height="345" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1&mute=1">
+    </iframe>
+
+  </section>
+
+  <!-- Forms -->
+  <section id="form">
+    <h2>5. Forms and Inputs</h2>
+    <form action="/submit" method="post">
+      <label for="name">Name: </label>
+      <input type="text" id="name" placeholder="Enter name"><br><br>
+
+      <label>Gender:</label>
+      <input type="radio" name="gender" value="female"> Female
+      <input type="radio" name="gender" value="male"> Male<br><br>
+
+      <label>Hobbies:</label>
+      <input type="checkbox" value="reading"> Reading
+      <input type="checkbox" value="coding" checked> Coding<br><br>
+
+      <label for="branch">Branch:</label>
+      <select id="branch">
+        <option value="cse">CSE</option>
+        <option value="ds">Data Science</option>
+        <option value="it">IT</option>
+        <option value="ai">AI</option>
+        <option value="aids">AIDS</option>
+      </select><br><br>
+
+      <textarea rows="4" cols="40" placeholder="Your message..."></textarea><br><br>
+
+      <input type="submit" value="Submit">
+      <input type="reset" value="Reset">
+    </form>
+  </section>
+
+  <!-- Semantic Elements -->
+  <section id="semantic">
+    <h2>6. Semantic Elements</h2>
+    <article>
+      <h3>Article Example</h3>
+      <p>This is an article inside the semantic section.</p>
+    </article>
+    <aside>
+      <h4>Aside Example</h4>
+      <p>Additional sidebar content or links.</p>
+    </aside>
+    <details>
+      <summary>Click for More Info</summary>
+      This text is hidden until expanded.
+    </details>
+    <time datetime="2025-10-29">October 29, 2025</time>
+  </section>
+
+  <!-- Multimedia and Graphics -->
+  <section id="graphics">
+    <h2>7. Canvas and SVG</h2>
+    <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;">
+      Canvas not supported.
+    </canvas><br><br>
+
+    <svg width="100" height="100">
+      <circle cx="50" cy="50" r="40" fill="skyblue" stroke="black"/>
+    </svg>
+  </section>
+
+  
+
+</body>
+</html>

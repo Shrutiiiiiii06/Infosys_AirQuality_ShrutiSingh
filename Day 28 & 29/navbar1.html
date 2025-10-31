@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Application Form</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" 
+        rel="stylesheet" 
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" 
+        crossorigin="anonymous">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #c2e9fb 0%, #a1c4fd 100%);
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .application-card {
+      max-width: 650px;
+      margin: 60px auto;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      background: #fff;
+    }
+    .output-card {
+      margin-top: 30px;
+      background: #e8f0fe;
+      padding: 15px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">CareerPortal</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+              data-bs-target="#navbarNav" aria-controls="navbarNav" 
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Jobs</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Job Application Form -->
+  <div class="container">
+    <div class="card application-card p-4">
+      <h3 class="text-center text-primary mb-4">Job Application Form</h3>
+      <form id="jobForm">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Full Name</label>
+          <input type="text" class="form-control" id="name" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Email Address</label>
+          <input type="email" class="form-control" id="email" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Phone Number</label>
+          <input type="tel" class="form-control" id="phone" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Position Applied For</label>
+          <select class="form-select" id="position" required>
+            <option value="">Select a position</option>
+            <option>Software Engineer</option>
+            <option>Data Analyst</option>
+            <option>UI/UX Designer</option>
+            <option>Project Manager</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Cover Letter</label>
+          <textarea class="form-control" id="message" rows="4"></textarea>
+        </div>
+
+        <div class="text-center">
+          <button type="submit" class="btn btn-success px-4">Submit</button>
+          <button type="reset" class="btn btn-secondary px-4 ms-2">Reset</button>
+        </div>
+      </form>
+
+      <!-- Output area -->
+      <div id="output" class="output-card d-none mt-4"></div>
+    </div>
+  </div>
+
+  <!-- Bootstrap + JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" 
+          integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" 
+          crossorigin="anonymous"></script>
+
+  <script>
+    document.getElementById("jobForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      // Collect form data
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const phone = document.getElementById("phone").value;
+      const position = document.getElementById("position").value;
+      const message = document.getElementById("message").value;
+
+      // Display it below
+      const outputDiv = document.getElementById("output");
+      outputDiv.innerHTML = `
+        <h5 class="text-primary">Application Submitted Successfully!</h5>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Position:</strong> ${position}</p>
+        <p><strong>Cover Letter:</strong> ${message}</p>
+      `;
+      outputDiv.classList.remove("d-none");
+    });
+  </script>
+
+</body>
+</html>
