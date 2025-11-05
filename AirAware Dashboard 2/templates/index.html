@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Air Quality Forecast Dashboard</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'air-green': '#5cb85c',
+            'air-blue': '#4a90e2',
+            'air-red': '#d0021b',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+  <style>
+    .card {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border: 1px solid #e0e0e0;
+      border-radius: 0.5rem;
+    }
+    canvas {
+      height: 100% !important;
+      width: 100% !important;
+    }
+    .metric-toggle-btn {
+      transition: background-color 0.15s;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+  <!-- Header -->
+  <div class="bg-air-green text-white p-4 mb-6 shadow-lg">
+    <div class="container mx-auto">
+      <h1 class="text-xl font-bold">Air Quality Forecast Engine</h1>
+      <h2 class="text-sm opacity-90">Milestone 2: Working Application (Weeks 3–4)</h2>
+    </div>
+  </div>
+
+  <!-- Pollutant Selector -->
+  <div class="container mx-auto px-4 mb-8">
+    <div class="bg-white p-4 rounded-xl shadow-md flex flex-col items-center justify-center space-y-3">
+      <h5 class="text-air-green font-bold text-lg">Forecast Pollutant</h5>
+      <div class="flex flex-wrap justify-center">
+        <button class="pollutant-btn px-3 py-1 m-1 text-sm rounded-lg font-bold bg-air-green text-white shadow" data-pollutant="PM2.5">PM2.5</button>
+        <button class="pollutant-btn px-3 py-1 m-1 text-sm rounded-lg font-semibold bg-gray-200 text-gray-700" data-pollutant="PM10">PM10</button>
+        <button class="pollutant-btn px-3 py-1 m-1 text-sm rounded-lg font-semibold bg-gray-200 text-gray-700" data-pollutant="O3">O₃</button>
+        <button class="pollutant-btn px-3 py-1 m-1 text-sm rounded-lg font-semibold bg-gray-200 text-gray-700" data-pollutant="NO2">NO₂</button>
+        <button class="pollutant-btn px-3 py-1 m-1 text-sm rounded-lg font-semibold bg-gray-200 text-gray-700" data-pollutant="SO2">SO₂</button>
+        <button class="pollutant-btn px-3 py-1 m-1 text-sm rounded-lg font-semibold bg-gray-200 text-gray-700" data-pollutant="CO">CO</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Layout -->
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-12 gap-6">
+
+      <!-- Model Performance -->
+      <div class="col-span-12 lg:col-span-6">
+        <div class="card bg-white p-4 rounded-xl h-full">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-air-blue font-bold text-lg" id="model-performance-title">Models Performance (RMSE)</h3>
+            <div class="flex space-x-1 border border-gray-300 rounded-lg p-0.5 text-xs font-semibold">
+              <button class="metric-toggle-btn px-2 py-1 rounded-md bg-air-blue text-white" data-metric="rmse">RMSE</button>
+              <button class="metric-toggle-btn px-2 py-1 rounded-md bg-gray-200 text-gray-700" data-metric="mae">MAE</button>
+            </div>
+          </div>
+          <div class="h-80">
+            <canvas id="modelPerformanceChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forecast Graph -->
+      <div class="col-span-12 lg:col-span-6">
+        <div class="card bg-white p-4 rounded-xl h-full">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-air-blue font-bold text-lg" id="forecast-chart-title">PM2.5 Forecast</h3>
+            <div class="flex items-center space-x-2 text-sm">
+              <label for="modelSelect" class="font-semibold text-gray-600">Model:</label>
+              <select id="modelSelect" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                <option value="ARIMA">ARIMA</option>
+                <option value="Prophet">Prophet</option>
+                <option value="LSTM" selected>LSTM</option>
+                <option value="XGBoost">XGBoost</option>
+              </select>
+
+              <label for="horizonSelect" class="font-semibold text-gray-600">Horizon:</label>
+              <select id="horizonSelect" class="border border-gray-300 rounded-md px-2 py-1 text-sm">
+                <option value="3h">3h</option>
+                <option value="6h">6h</option>
+                <option value="12h">12h</option>
+                <option value="24h" selected>24h</option>
+                <option value="48h">48h</option>
+              </select>
+            </div>
+          </div>
+          <div class="h-80">
+            <canvas id="pm25ForecastChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Best Model Table -->
+      <div class="col-span-12 lg:col-span-5">
+        <div class="card bg-white p-4 rounded-xl h-full">
+          <h3 class="text-air-blue font-bold text-lg mb-3">Best Model by Pollutant</h3>
+          <div class="overflow-x-auto">
+            <table class="table w-full text-sm text-left text-gray-600 border-collapse">
+              <thead class="text-xs text-air-green uppercase bg-gray-50 border-b">
+                <tr>
+                  <th class="px-3 py-2">Pollutant</th>
+                  <th class="px-3 py-2">Best Model</th>
+                  <th class="px-3 py-2">RMSE</th>
+                  <th class="px-3 py-2">MAE</th>
+                </tr>
+              </thead>
+              <tbody id="accuracy-table-body">
+                <tr><td colspan="4" class="text-center py-4">Loading accuracy data...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forecast Accuracy Chart -->
+      <div class="col-span-12 lg:col-span-7">
+        <div class="card bg-white p-4 rounded-xl h-full">
+          <h3 class="text-air-blue font-bold text-lg mb-3">Forecast Accuracy</h3>
+          <div class="h-80">
+            <canvas id="forecastAccuracyChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
