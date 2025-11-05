@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Quality Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        body { background-color: #f7f7f7; }
+        .dashboard-header { background-color: #5cb85c; color: white; padding: 10px 0; margin-bottom: 20px; }
+        .card { 
+            border-radius: 0.5rem; 
+            box-shadow: 0 2px 4px rgba(0,0,0,.1); 
+            margin-bottom: 1.5rem; 
+            border: 1px solid #e0e0e0; 
+        }
+        .data-control-card { 
+            background-color: #f8f9fa; 
+            border: none;
+            box-shadow: none;
+        }
+        .text-success-accent { color: #5cb85c !important; }
+        .btn-success-main { 
+            background-color: #5cb85c; 
+            border-color: #4cae4c; 
+            color: white; 
+            font-weight: bold;
+        }
+        .pollutant-btn { 
+            width: 4.5rem; 
+            margin: 0.25rem; 
+            padding: 0.2rem 0.5rem; 
+            font-size: 0.9rem;
+        }
+        .pm25-bg { background-color: #5cb85c; color: white; border-color: #4cae4c; }
+        .stat-box { 
+            background-color: #e8f5e9; /* Very light green background */
+            border: 1px solid #cceeff; 
+            padding: 0.75rem; 
+            text-align: center; 
+            border-radius: 0.3rem; 
+            margin-bottom: 0.5rem;
+            min-height: 80px; /* Ensure uniformity */
+        }
+        .stat-value { font-size: 1.6rem; font-weight: 900; color: #333; }
+        .stat-label { font-size: 0.75rem; color: #666; font-weight: 500; }
+        .data-quality-progress { height: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-header">
+        <div class="container-fluid">
+            <h2 class="mb-0">Milestone 1: Working Application(Week 1-2)</h2>
+        </div>
+    </div>
+    
+    <div class="container-fluid p-3">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="card data-control-card p-3">
+                    <h5 class="text-success-accent mb-3">Data Controls</h5>
+                    <hr class="mt-0">
+                    
+                    <div class="mb-3">
+                        <label for="location-select" class="form-label fw-bold">Location</label>
+                        <select class="form-select form-select-sm" id="location-select">
+                            {% for city in cities %}
+                                <option value="{{ city }}" {% if loop.index == 1 %}selected{% endif %}>{{ city }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="time-range-select" class="form-label fw-bold">Time Range</label>
+                        <select class="form-select form-select-sm" id="time-range-select">
+                            <option selected>Last 24 Hours</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Pollutants</label>
+                        <div class="d-flex flex-wrap">
+                            <button class="btn btn-sm pollutant-btn pm25-bg fw-bold" id="btn-pm25">PM2.5</button>
+                            <button class="btn btn-sm btn-light pollutant-btn fw-bold">PM10</button>
+                            <button class="btn btn-sm btn-light pollutant-btn fw-bold">NO2</button>
+                            <button class="btn btn-sm btn-light pollutant-btn fw-bold">O3</button>
+                            <button class="btn btn-sm btn-light pollutant-btn fw-bold">SO2</button>
+                            <button class="btn btn-sm btn-light pollutant-btn fw-bold">CO</button>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-success-main fw-bold mt-2 mb-4" id="apply-filters-btn">
+                        Apply Filters
+                    </button>
+
+                    <h5 class="text-success-accent mb-3">✅ Data Quality</h5>
+                    <hr class="mt-0">
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small class="text-muted">Completeness:</small>
+                            <small class="text-success-accent fw-bold" id="completeness-val">92%</small>
+                        </div>
+                        <div class="progress data-quality-progress">
+                            <div class="progress-bar bg-success" role="progressbar" id="completeness-bar" style="width: 92%;" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small class="text-muted">Validity:</small>
+                            <small class="text-warning fw-bold" id="validity-val">87%</small>
+                        </div>
+                        <div class="progress data-quality-progress">
+                            <div class="progress-bar bg-warning" role="progressbar" id="validity-bar" style="width: 87%;" aria-valuenow="87" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card p-3">
+                            <h5 class="text-success-accent">PM2.5 Time Series</h5>
+                            <small class="text-muted">Concentration (µg/m³)</small>
+                            <div style="height: 280px;">
+                                <canvas id="timeSeriesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card p-3">
+                            <h5 class="text-success-accent">Pollutant Correlations</h5>
+                            <div style="height: 280px;"> 
+                                <canvas id="correlationChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card p-3">
+                            <h5 class="text-success-accent">Statistical Summary</h5>
+                            <div class="row text-center pt-2">
+                                <div class="col-4">
+                                    <div class="stat-box">
+                                        <div class="stat-value text-success-accent" id="stat-mean">42.3</div>
+                                        <div class="stat-label">Mean (µg/m³)</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-box">
+                                        <div class="stat-value text-success-accent" id="stat-median">38.7</div>
+                                        <div class="stat-label">Median (µg/m³)</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-box">
+                                        <div class="stat-value" id="stat-max">125.6</div>
+                                        <div class="stat-label">Max (µg/m³)</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="stat-box">
+                                        <div class="stat-value" id="stat-stddev">18.4</div>
+                                        <div class="stat-label">Std Dev</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="stat-box">
+                                        <div class="stat-value" id="stat-data-points">1,248</div>
+                                        <div class="stat-label">Data Points</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card p-3">
+                            <h5 class="text-success-accent">Distribution Analysis</h5>
+                            <small class="text-muted">Frequency</small>
+                            <div style="height: 280px;">
+                                <canvas id="distributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
