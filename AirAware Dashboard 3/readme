@@ -1,0 +1,60 @@
+# air_quality_api/
+# ├── datahandler.py         # Data model logic (Air Quality Calculations)
+# ├── api.py                 # Flask server (Backend API)
+# ├── requirements.txt       # Flask dependencies (Flask, pandas, etc.)
+
+# air_quality_dashboard/
+# ├── dashboard_app.py       # Streamlit frontend (Client)
+# ├── requirements.txt       # Streamlit dependencies (streamlit, pandas, plotly)
+
+
+
+# pip install -r air_quality_api/requirements.txt
+# pip install -r air_quality_dashboard/requirements.txt
+
+# ---
+
+# ## Step 1: Start the Flask Backend (The API)
+
+# The Flask API handles the data processing and sits on **port 5000**. Streamlit will talk to this port.
+
+# 1.  **Open your command prompt/terminal.**
+# 2.  **Navigate to the Flask directory:**
+#     ```bash
+#     cd air_quality_api
+#     3.  **Run the API server:**
+#     ```bash
+#     python api.py
+    
+# **Keep this terminal window open.** It should show output confirming the server is running on `http://127.0.0.1:5000`. If you see any errors here (like `FileNotFoundError`), you must fix them before moving to Step 2.
+
+# ---
+
+# ## Step 2: Start the Streamlit Frontend (The Dashboard)
+
+# The Streamlit app is the web interface that requests data from the running Flask API.
+
+# 1.  **Open a SECOND command prompt/terminal window.**
+# 2.  **Navigate to the Streamlit directory:**
+#     ```bash
+#     cd air_quality_dashboard
+#     3.  **Run the Streamlit application:**
+#     ```bash
+#     streamlit run dashboard_app.py
+    
+# Streamlit will automatically open a new browser tab (usually at `http://localhost:8501`). The dashboard will then attempt to fetch data from the Flask server you started in Step 1.
+
+# ---
+
+# ## Summary of Execution
+
+# You must have **two terminal windows running simultaneously**:
+
+# | Terminal Window | Folder | Command | Purpose |
+# | :--- | :--- | :--- | :--- |
+# | **1 (Backend)** | `air_quality_api` | `python api.py` | **Runs your model/data handler.** |
+# | **2 (Frontend)** | `air_quality_dashboard` | `streamlit run dashboard_app.py` | **Runs the web interface.** |
+
+
+
+
